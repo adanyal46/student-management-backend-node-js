@@ -33,7 +33,7 @@ model User {
 
 model Student {
   id                    Int                    @id @default(autoincrement())
-  userId                Int                    @unique
+  userId                Int                    
   firstName             String
   lastName              String
   dateOfBirth           DateTime

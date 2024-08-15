@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 // Define your routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/student", studentRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ error: "Not Found" });

@@ -1,4 +1,3 @@
-const { authResource } = require("../resource/authResource");
 const { UserListResource, UserResource } = require("../resource/userResource");
 const userService = require("../services/userService");
 
