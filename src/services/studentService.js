@@ -1,8 +1,46 @@
 const prisma = require("../../prisma/client");
 
-const getAllStudent = async () => {
-  const user = await prisma.student.findMany({});
-  return user;
+const getAllStudent = async (page = 1, pageSize = 10, search = "") => {
+  const skip = (page - 1) * pageSize;
+
+  // Fetch paginated students
+  const studentsPromise = prisma.student.findMany({
+    skip,
+    take: pageSize,
+    where: {
+      OR: [
+        { firstName: { contains: search } },
+        { lastName: { contains: search } },
+        // { dateOfBirth: { contains: new Date(search) } },
+        { class: { contains: search } },
+        { guardianContact: { contains: search,  } },
+        { guardianName: { contains: search } },
+      
+      ],
+    },
+  });
+
+  // Fetch total count of students matching search criteria
+  const totalCountPromise = prisma.student.count({
+    where: {
+      OR: [
+        { firstName: { contains: search } },
+        { lastName: { contains: search } },
+        // { dateOfBirth: { contains:new Date(search)} },
+        { class: { contains: search } },
+        { guardianContact: { contains: search,  } },
+        { guardianName: { contains: search } },
+      ],
+    },
+  });
+
+  // Execute queries in parallel
+  const [students, totalCount] = await Promise.all([
+    studentsPromise,
+    totalCountPromise,
+  ]);
+
+  return { students, totalCount };
 };
 
 const createStudent = async (data) => {
@@ -40,5 +78,5 @@ module.exports = {
   getSingleStudent,
   updateStudent,
   deleteStudent,
-  createStudent
+  createStudent,
 };

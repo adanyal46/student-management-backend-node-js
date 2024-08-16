@@ -32,11 +32,15 @@ const login = async (username, password) => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new Error("Invalid credentials");
   }
-  const token = jwt.sign({ userId: user.id, role: user.role }, jwtSecret, {
-    expiresIn: "1h",
-  });
+  const token = jwt.sign(
+    { userId: user.id, role: user.role, username: user.username },
+    jwtSecret,
+    {
+      expiresIn: "1h",
+    }
+  );
 
-  const { password:hashedPassword, ...rest } = user;
+  const { password: hashedPassword, ...rest } = user;
 
   return { user: rest, token };
 };

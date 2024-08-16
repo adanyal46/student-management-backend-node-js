@@ -5,11 +5,13 @@ const {
 const studentService = require("../services/studentService");
 
 const getAllStudent = async (req, res, next) => {
+  const { page = 1, pageSize = 10, search = '' } = req.query;
+
   try {
-    const students = await studentService.getAllStudent();
+    const students = await studentService.getAllStudent(Number(page), Number(pageSize), search);
     return res
       .status(201)
-      .json({ success: true, students: StudentListResource(students) });
+      .json({ success: true, ...students });
   } catch (error) {
     next(error);
   }
